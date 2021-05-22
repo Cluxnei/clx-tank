@@ -6,3 +6,5 @@ clx-tank/clx-tank/x64
 *.vcxproj
 */*.vcxproj
 clx-tank/.vs
+*/*.dll
+*.*.vcxproj.*
