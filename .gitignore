@@ -5,3 +5,4 @@ clx-tank/clx-tank/Debug
 clx-tank/clx-tank/x64
 *.vcxproj
 */*.vcxproj
+clx-tank/.vs
