@@ -9,7 +9,7 @@ class GameWrapper
 		sf::RenderWindow *window;
 	public:
 		GameWrapper() {
-
+			this->window = nullptr;
 		}
 		void setWindow(sf::RenderWindow& window);
 		bool isRuning();
@@ -42,7 +42,6 @@ void GameWrapper::bindInputs() {
 		if (event.type == sf::Event::Closed) {
 			this->window->close();
 		}
-
 		this->doPlayerControlsEventPropagation(event);
 	}
 }
