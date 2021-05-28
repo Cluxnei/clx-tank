@@ -60,7 +60,7 @@ void GameWrapper::update() {
 
 void GameWrapper::updatePlayers() {
 	for (auto& player : this->players) {
-		player.update();
+		player.update(this->window);
 	}
 }
 

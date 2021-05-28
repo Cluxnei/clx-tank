@@ -1,17 +1,17 @@
 #include <SFML/Graphics.hpp>
 #include "GameWrapper.h"
 #include <string>
+#include <windows.h>
 
 int main()
 {
-
     sf::Texture texture;
 
     if (!texture.loadFromFile("images/spaceship.png", sf::IntRect(0, 0, 64, 64))) {
         return 1;
     }
 
-    const int windowWidth = 1920, windowHeight = 1080;
+    const int windowWidth = 1000, windowHeight = 1000;
 
     const float windowRatio = static_cast<float>(windowWidth) / windowHeight;
 
