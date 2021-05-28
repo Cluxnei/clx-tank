@@ -7,10 +7,10 @@ class Shoot
 	private:
 		sf::Vector2f position;
 		sf::Vector2f velocity;
-		bool active;
 		std::pair<std::pair<float, float>, std::pair<float, float>> movementLimits;
 		sf::RectangleShape shape;
 	public:
+		bool active;
 		Shoot(sf::Vector2f position) {
 			this->position = position;
 			this->velocity = sf::Vector2f(0.1f, 0.1f);
@@ -39,7 +39,7 @@ void Shoot::update() {
 
 void Shoot::render(sf::RenderWindow *window) {
 	if (!this->active) {
-		// return;
+		return;
 	}
 	window->draw(this->shape);
 }

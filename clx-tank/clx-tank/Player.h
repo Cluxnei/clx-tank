@@ -14,7 +14,9 @@ class Player
 		sf::Sprite shape;
 		Controls controls;
 		sf::Vector2f shootStartPoint;
-		int lastShootAt;
+		int shootsPerSecond;
+		std::int64_t lastShootAt;
+		float shootDelay;
 	public:
 		Player() {
 			this->position = sf::Vector2f(0.f, 0.f);
@@ -22,7 +24,9 @@ class Player
 			this->shootStartPoint = this->shape.getTransform().transformPoint(32, 16);
 			this->shape = sf::Sprite();
 			this->shape.setPosition(this->position);
-			this->lastShootAt = 0;
+			this->shootsPerSecond = 10;
+			this->lastShootAt = Utils::currentTime();
+			this->shootDelay = 1.f / this->shootsPerSecond * 1000;
 		}
 		void setPosition(float x, float y);
 		void setVelocity(float x, float y);
@@ -66,31 +70,31 @@ void Player::update(sf::RenderWindow* window, std::vector<Shoot>& shoots, int el
 	Utils::setOriginAndReadjust(this->shape, sf::Vector2f(diffOrigin, diffOrigin));
 	this->shape.setRotation(angle);
 	this->shootStartPoint = this->shape.getTransform().transformPoint(32, 16);
-	if (this->lastShootAt != elapsedTime && sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
+	if (Utils::currentTime() - this->lastShootAt > this->shootDelay && sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
 		this->shoot(shoots, mousePosition);
-		this->lastShootAt = elapsedTime;
+		this->lastShootAt = Utils::currentTime();
 	}
 }
 
 void Player::render(sf::RenderWindow *window) {
 	// sprite
 	this->shape.setPosition(this->position);
-	// shape
-	sf::RectangleShape r;
-	sf::FloatRect s = this->shape.getLocalBounds();
-	r.setSize(sf::Vector2f(s.width, s.height));
-	r.setFillColor(sf::Color::Green);
-	r.setPosition(sf::Vector2f(this->position.x, this->position.y));
-	Utils::setOriginAndReadjust(r, sf::Vector2f(8.f, 8.f));
-	r.setRotation(this->shape.getRotation());
-	window->draw(r);
-	// sprite
 	window->draw(this->shape);
+	// shape
+	//sf::RectangleShape r;
+	//sf::FloatRect s = this->shape.getLocalBounds();
+	//r.setSize(sf::Vector2f(s.width, s.height));
+	//r.setFillColor(sf::Color::Green);
+	//r.setPosition(sf::Vector2f(this->position.x, this->position.y));
+	//Utils::setOriginAndReadjust(r, sf::Vector2f(8.f, 8.f));
+	//r.setRotation(this->shape.getRotation());
+	//window->draw(r);
+	// sprite
 	// shot origin
-	sf::CircleShape c(3.f);
-	c.setFillColor(sf::Color::Red);
-	c.setPosition(this->shootStartPoint);
-	window->draw(c);	
+	//sf::CircleShape c(3.f);
+	//c.setFillColor(sf::Color::Red);
+	//c.setPosition(this->shootStartPoint);
+	//window->draw(c);	
 }
 
 void Player::shoot(std::vector<Shoot>& shoots, sf::Vector2i mousePosition) {

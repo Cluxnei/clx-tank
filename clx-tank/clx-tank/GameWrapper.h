@@ -13,12 +13,14 @@ class GameWrapper
 		std::vector<Shoot> shoots;
 		sf::RenderWindow *window;
 		int startTime;
+		int lastElapsedTime;
 		int lastEnemySpawnTime;
 	public:
 		GameWrapper() {
 			this->startTime = time(NULL);
 			this->window = nullptr;
 			this->lastEnemySpawnTime = 0;
+			this->lastElapsedTime = 0;
 		}
 		void setWindow(sf::RenderWindow& window);
 		bool isRuning();
@@ -32,6 +34,8 @@ class GameWrapper
 		int getElapsedTime();
 		void updateShoots();
 		void renderShoots();
+		void clearAndReallocateResources();
+		void reallocShoots();
 };
 
 
@@ -104,5 +108,26 @@ void GameWrapper::updateShoots() {
 void GameWrapper::renderShoots() {
 	for (auto& shoot : this->shoots) {
 		shoot.render(this->window);
+	}
+}
+
+void GameWrapper::clearAndReallocateResources() {
+	int elapesedTime = this->getElapsedTime();
+	if (elapesedTime > this->lastElapsedTime) {
+		if (elapesedTime % 2 == 0) {
+			this->reallocShoots();
+		}
+		this->lastElapsedTime = elapesedTime;
+	}
+}
+
+void GameWrapper::reallocShoots() {
+	auto it = this->shoots.begin();
+	while (it != this->shoots.end()) {
+		if (!it->active) {
+			it = this->shoots.erase(it);
+			continue;
+		}
+		++it;
 	}
 }
