@@ -1,4 +1,5 @@
 #include <iostream>
+#include <utility>
 
 #pragma once
 class Controls
@@ -14,10 +15,7 @@ class Controls
 		bool moveRight;
 		float movementXFactor;
 		float movementYFactor;
-		float movementMinX;
-		float movementMaxX;
-		float movementMinY;
-		float movementMaxY;
+		std::pair<std::pair<float, float>, std::pair<float, float>> movementLimits;
 	public:
 		Controls() {
 			this->moveUp = false;
@@ -30,17 +28,15 @@ class Controls
 			this->moveDownKey = sf::Keyboard::Key::S;
 			this->moveLeftKey = sf::Keyboard::Key::A;
 			this->moveRightKey = sf::Keyboard::Key::D;
-			this->movementMinX = 0.f;
-			this->movementMaxX = 0.f;
-			this->movementMinY = 0.f;
-			this->movementMaxY = 0.f;
+			this->movementLimits = std::make_pair(std::make_pair(0.f, 0.f), std::make_pair(0.f, 0.f));
 		}
 		void setMoveKeys(const sf::Keyboard::Key up, const sf::Keyboard::Key down, const sf::Keyboard::Key left, const sf::Keyboard::Key right);
-		void bindMoveKeys();
+		std::pair< std::pair<float, float>, std::pair<float, float>> getMovementLimits();
 		void setMovementFactor(const float x, const float y);
 		sf::Vector2f getMovementResultVector();
 		void setMovementLimits(const float minX, const float maxX, const float minY, const float maxY);
 		bool inMovementArea(const sf::Vector2f position, const sf::Vector2f size);
+		void bindMoveKeys();
 };
 
 void Controls::setMovementFactor(const float x, const float y) {
@@ -77,15 +73,16 @@ sf::Vector2f Controls::getMovementResultVector() {
 }
 
 void Controls::setMovementLimits(const float minX, const float maxX, const float minY, const float maxY) {
-	this->movementMinX = minX;
-	this->movementMaxX = maxX;
-	this->movementMinY = minY;
-	this->movementMaxY = maxY;
+	this->movementLimits = std::make_pair(std::make_pair(minX, maxX), std::make_pair(minY, maxY));
+}
+
+std::pair<std::pair<float, float>, std::pair<float, float>> Controls::getMovementLimits() {
+	return this->movementLimits;
 }
 
 bool Controls::inMovementArea(const sf::Vector2f position, const sf::Vector2f size) {
-	return position.x >= this->movementMinX 
-		&& position.x + size.x <= this->movementMaxX
-		&& position.y >= this->movementMaxY
-		&& position.y + size.y <= this->movementMinY;
+	return position.x >= this->movementLimits.first.first 
+		&& position.x + size.x <= this->movementLimits.first.second
+		&& position.y >= this->movementLimits.second.second
+		&& position.y + size.y <= this->movementLimits.second.first;
 }

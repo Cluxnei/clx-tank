@@ -2,6 +2,7 @@
 #include <vector>
 #include "Player.h"
 #include "Enemy.h"
+#include "Shoot.h"
 #include <iostream>
 
 class GameWrapper
@@ -9,6 +10,7 @@ class GameWrapper
 	private:
 		std::vector<Player> players;
 		std::vector<Enemy> enemies;
+		std::vector<Shoot> shoots;
 		sf::RenderWindow *window;
 		int startTime;
 		int lastEnemySpawnTime;
@@ -28,6 +30,8 @@ class GameWrapper
 		void renderPlayers();
 		void spawnEnemies();
 		int getElapsedTime();
+		void updateShoots();
+		void renderShoots();
 };
 
 
@@ -56,11 +60,12 @@ void GameWrapper::bindInputs() {
 void GameWrapper::update() {
 	this->updatePlayers();
 	this->spawnEnemies();
+	this->updateShoots();
 }
 
 void GameWrapper::updatePlayers() {
 	for (auto& player : this->players) {
-		player.update(this->window);
+		player.update(this->window, this->shoots, this->getElapsedTime());
 	}
 }
 
@@ -73,6 +78,7 @@ void GameWrapper::renderPlayers() {
 void GameWrapper::render() {
 	this->window->clear();
 	this->renderPlayers();
+	this->renderShoots();
 	this->window->display();
 }
 
@@ -81,10 +87,22 @@ void GameWrapper::spawnEnemies() {
 	if (time % 10 != 0 || this->lastEnemySpawnTime == time) {
 		return;
 	}
-	std::cout << "spwan" << std::endl;
+	// Spawn
 	this->lastEnemySpawnTime = time;
 }
 
 int GameWrapper::getElapsedTime() {
 	return time(NULL) - this->startTime;
+}
+
+void GameWrapper::updateShoots() {
+	for (auto& shoot : this->shoots) {
+		shoot.update();
+	}
+}
+
+void GameWrapper::renderShoots() {
+	for (auto& shoot : this->shoots) {
+		shoot.render(this->window);
+	}
 }

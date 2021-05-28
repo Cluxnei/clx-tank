@@ -4,6 +4,7 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 #include "Utils.h"
+#include "Shoot.h"
 
 class Player
 {
@@ -13,6 +14,7 @@ class Player
 		sf::Sprite shape;
 		Controls controls;
 		sf::Vector2f shootStartPoint;
+		int lastShootAt;
 	public:
 		Player() {
 			this->position = sf::Vector2f(0.f, 0.f);
@@ -20,13 +22,15 @@ class Player
 			this->shootStartPoint = this->shape.getTransform().transformPoint(32, 16);
 			this->shape = sf::Sprite();
 			this->shape.setPosition(this->position);
+			this->lastShootAt = 0;
 		}
 		void setPosition(float x, float y);
 		void setVelocity(float x, float y);
 		void setControls(Controls &controls);
 		void setTexture(sf::Texture &texture);
-		void update(sf::RenderWindow *window);
+		void update(sf::RenderWindow *window, std::vector<Shoot>& shoots, int elapsedTime);
 		void render(sf::RenderWindow *window);
+		void shoot(std::vector<Shoot>& shoots, sf::Vector2i mousePosition);
 };
 
 void Player::setPosition(float x, float y) {
@@ -47,7 +51,7 @@ void Player::setTexture(sf::Texture &texture) {
 	this->shape.setTexture(texture);
 }
 
-void Player::update(sf::RenderWindow *window) {
+void Player::update(sf::RenderWindow* window, std::vector<Shoot>& shoots, int elapsedTime) {
 	this->velocity = this->controls.getMovementResultVector();
 	sf::Vector2u textureSize = this->shape.getTexture()->getSize();
 	const sf::Vector2f size(textureSize.x, textureSize.y);
@@ -62,6 +66,10 @@ void Player::update(sf::RenderWindow *window) {
 	Utils::setOriginAndReadjust(this->shape, sf::Vector2f(diffOrigin, diffOrigin));
 	this->shape.setRotation(angle);
 	this->shootStartPoint = this->shape.getTransform().transformPoint(32, 16);
+	if (this->lastShootAt != elapsedTime && sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
+		this->shoot(shoots, mousePosition);
+		this->lastShootAt = elapsedTime;
+	}
 }
 
 void Player::render(sf::RenderWindow *window) {
@@ -83,4 +91,12 @@ void Player::render(sf::RenderWindow *window) {
 	c.setFillColor(sf::Color::Red);
 	c.setPosition(this->shootStartPoint);
 	window->draw(c);	
+}
+
+void Player::shoot(std::vector<Shoot>& shoots, sf::Vector2i mousePosition) {
+	Shoot *s = new Shoot(this->shootStartPoint);
+	s->setLimits(this->controls.getMovementLimits());
+	s->setVelocity(Utils::normalize(sf::Vector2f(mousePosition.x, mousePosition.y) - this->shootStartPoint));
+	s->setRotation(this->shape.getRotation());
+	shoots.push_back(*s);
 }
