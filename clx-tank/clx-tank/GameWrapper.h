@@ -1,25 +1,33 @@
 #pragma once
 #include <vector>
 #include "Player.h"
+#include "Enemy.h"
+#include <iostream>
 
 class GameWrapper
 {
 	private:
 		std::vector<Player> players;
+		std::vector<Enemy> enemies;
 		sf::RenderWindow *window;
+		int startTime;
+		int lastEnemySpawnTime;
 	public:
 		GameWrapper() {
+			this->startTime = time(NULL);
 			this->window = nullptr;
+			this->lastEnemySpawnTime = 0;
 		}
 		void setWindow(sf::RenderWindow& window);
 		bool isRuning();
 		void bindInputs();
 		void addPlayer(Player& player);
-		void doPlayerControlsEventPropagation(sf::Event& event);
 		void update();
 		void updatePlayers();
 		void render();
 		void renderPlayers();
+		void spawnEnemies();
+		int getElapsedTime();
 };
 
 
@@ -42,18 +50,12 @@ void GameWrapper::bindInputs() {
 		if (event.type == sf::Event::Closed) {
 			this->window->close();
 		}
-		this->doPlayerControlsEventPropagation(event);
-	}
-}
-
-void GameWrapper::doPlayerControlsEventPropagation(sf::Event& event) {
-	for (auto &player : this->players) {
-		player.bindControlEvent(event);
 	}
 }
 
 void GameWrapper::update() {
 	this->updatePlayers();
+	this->spawnEnemies();
 }
 
 void GameWrapper::updatePlayers() {
@@ -72,4 +74,17 @@ void GameWrapper::render() {
 	this->window->clear();
 	this->renderPlayers();
 	this->window->display();
+}
+
+void GameWrapper::spawnEnemies() {
+	int time = this->getElapsedTime();
+	if (time % 10 != 0 || this->lastEnemySpawnTime == time) {
+		return;
+	}
+	std::cout << "spwan" << std::endl;
+	this->lastEnemySpawnTime = time;
+}
+
+int GameWrapper::getElapsedTime() {
+	return time(NULL) - this->startTime;
 }

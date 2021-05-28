@@ -19,7 +19,6 @@ class Player
 		void setPosition(float x, float y);
 		void setVelocity(float x, float y);
 		void setControls(Controls &controls);
-		void bindControlEvent(sf::Event& event);
 		void setTexture(sf::Texture &texture);
 		void update();
 		void render(sf::RenderWindow *window);
@@ -37,10 +36,6 @@ void Player::setVelocity(float x, float y) {
 
 void Player::setControls(Controls &controls) {
 	this->controls = controls;
-}
-
-void Player::bindControlEvent(sf::Event &event) {
-	this->controls.bindEvent(event);
 }
 
 void Player::setTexture(sf::Texture &texture) {

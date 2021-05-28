@@ -36,9 +36,7 @@ class Controls
 			this->movementMaxY = 0.f;
 		}
 		void setMoveKeys(const sf::Keyboard::Key up, const sf::Keyboard::Key down, const sf::Keyboard::Key left, const sf::Keyboard::Key right);
-		void bindMoveKey(const sf::Keyboard::Key key);
-		void bindUnMoveKey(const sf::Keyboard::Key key);
-		void bindEvent(const sf::Event& event);
+		void bindMoveKeys();
 		void setMovementFactor(const float x, const float y);
 		sf::Vector2f getMovementResultVector();
 		void setMovementLimits(const float minX, const float maxX, const float minY, const float maxY);
@@ -57,35 +55,15 @@ void Controls::setMoveKeys(const sf::Keyboard::Key up, const sf::Keyboard::Key d
 	this->moveRightKey = right;
 }
 
-void Controls::bindEvent(const sf::Event &event) {
-	switch (event.type)
-	{
-		case sf::Event::KeyPressed:
-			this->bindMoveKey(event.key.code);
-		break;
-		case sf::Event::KeyReleased:
-			this->bindUnMoveKey(event.key.code);
-		break;
-		default:
-		break;
-	}
-}
-
-void Controls::bindMoveKey(const sf::Keyboard::Key key) {
-	this->moveUp = key == this->moveUpKey;
-	this->moveDown = key == this->moveDownKey;
-	this->moveLeft = key == this->moveLeftKey;
-	this->moveRight = key == this->moveRightKey;
-}
-
-void Controls::bindUnMoveKey(const sf::Keyboard::Key key) {
-	this->moveUp = key == this->moveUpKey ? false : this->moveUp;
-	this->moveDown = key == this->moveDownKey ? false : this->moveDown;
-	this->moveLeft = key == this->moveLeftKey ? false : this->moveLeft;
-	this->moveRight = key == this->moveRightKey ? false : this->moveRight;
+void Controls::bindMoveKeys() {
+	this->moveUp = sf::Keyboard::isKeyPressed(this->moveUpKey);
+	this->moveDown = sf::Keyboard::isKeyPressed(this->moveDownKey);
+	this->moveLeft = sf::Keyboard::isKeyPressed(this->moveLeftKey);
+	this->moveRight = sf::Keyboard::isKeyPressed(this->moveRightKey);
 }
 
 sf::Vector2f Controls::getMovementResultVector() {
+	this->bindMoveKeys();
 	sf::Vector2f vector(0.f, 0.f);
 	if (this->moveUp)
 		vector.y -= this->movementYFactor;
