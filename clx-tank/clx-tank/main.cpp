@@ -2,9 +2,12 @@
 #include "GameWrapper.h"
 #include <string>
 #include <windows.h>
+#include <time.h>
 
 int main()
 {
+    srand(static_cast<unsigned>(time(NULL)));
+
     const int windowWidth = 1920, windowHeight = 1080;
 
     const float windowRatio = static_cast<float>(windowWidth) / windowHeight;
@@ -21,6 +24,12 @@ int main()
         return 1;
     }
 
+    sf::Texture enemiesTexture;
+
+    if (!enemiesTexture.loadFromFile("images/enemy.png", sf::IntRect(0, 0, 128, 128))) {
+        return 1;
+    }
+
     sf::RenderWindow window(sf::VideoMode(windowWidth, windowHeight), "CLX TANK"/*, sf::Style::Fullscreen*/);
     
     window.setPosition(sf::Vector2i(0, 0));
@@ -30,6 +39,8 @@ int main()
     gameWrapper->setWindow(window);
 
     gameWrapper->setBackgroundTexture(backgroundTexture);
+
+    gameWrapper->setEnemyTexture(enemiesTexture);
 
     Player* playerOne = new Player();
 

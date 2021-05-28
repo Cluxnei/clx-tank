@@ -16,10 +16,11 @@ class GameWrapper
 		int startTime;
 		int lastElapsedTime;
 		int lastEnemySpawnTime;
+		sf::Texture enemyTexture;
 	public:
 		GameWrapper() {
 			this->startTime = time(NULL);
-			this->window = nullptr;
+			this->window = NULL;
 			this->lastEnemySpawnTime = 0;
 			this->lastElapsedTime = 0;
 		}
@@ -38,6 +39,9 @@ class GameWrapper
 		void clearAndReallocateResources();
 		void reallocShoots();
 		void setBackgroundTexture(sf::Texture &texture);
+		void setEnemyTexture(sf::Texture &texture);
+		void updateEnemies();
+		void renderEnemies();
 };
 
 
@@ -67,6 +71,7 @@ void GameWrapper::update() {
 	this->updatePlayers();
 	this->spawnEnemies();
 	this->updateShoots();
+	this->updateEnemies();
 }
 
 void GameWrapper::updatePlayers() {
@@ -86,15 +91,18 @@ void GameWrapper::render() {
 	this->window->draw(this->background);
 	this->renderShoots();
 	this->renderPlayers();
+	this->renderEnemies();
 	this->window->display();
 }
 
 void GameWrapper::spawnEnemies() {
 	int time = this->getElapsedTime();
-	if (time % 10 != 0 || this->lastEnemySpawnTime == time) {
+	if (time % 2 != 0 || this->lastEnemySpawnTime == time) {
 		return;
 	}
-	// Spawn
+	Enemy *enemy = new Enemy();
+	enemy->setTexture(this->enemyTexture);
+	this->enemies.push_back(*enemy);
 	this->lastEnemySpawnTime = time;
 }
 
@@ -137,4 +145,20 @@ void GameWrapper::reallocShoots() {
 
 void GameWrapper::setBackgroundTexture(sf::Texture& texture) {
 	this->background.setTexture(texture);
+}
+
+void GameWrapper::setEnemyTexture(sf::Texture& texture) {
+	this->enemyTexture = texture;
+}
+
+void GameWrapper::updateEnemies() {
+	for (auto& enemy : this->enemies) {
+		enemy.update();
+	}
+}
+
+void GameWrapper::renderEnemies() {
+	for (auto& enemy : this->enemies) {
+		enemy.render(this->window);
+	}
 }

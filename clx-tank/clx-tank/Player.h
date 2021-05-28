@@ -100,7 +100,7 @@ void Player::render(sf::RenderWindow *window) {
 void Player::shoot(std::vector<Shoot>& shoots, sf::Vector2i mousePosition) {
 	Shoot *s = new Shoot(this->shootStartPoint);
 	s->setLimits(this->controls.getMovementLimits());
-	s->setVelocity(Utils::normalize(sf::Vector2f(mousePosition.x, mousePosition.y) - this->shootStartPoint));
+	s->setVelocity(Utils::normalize(sf::Vector2f(mousePosition.x, mousePosition.y) - this->shootStartPoint) * 2.f);
 	s->setRotation(this->shape.getRotation());
 	shoots.push_back(*s);
 }
