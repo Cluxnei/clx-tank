@@ -5,15 +5,21 @@
 
 int main()
 {
+    const int windowWidth = 1920, windowHeight = 1080;
+
+    const float windowRatio = static_cast<float>(windowWidth) / windowHeight;
+
     sf::Texture texture;
 
     if (!texture.loadFromFile("images/spaceship.png", sf::IntRect(0, 0, 64, 64))) {
         return 1;
     }
 
-    const int windowWidth = 1000, windowHeight = 1000;
+    sf::Texture backgroundTexture;
 
-    const float windowRatio = static_cast<float>(windowWidth) / windowHeight;
+    if (!backgroundTexture.loadFromFile("images/background.png", sf::IntRect(0, 0, windowWidth, windowHeight))) {
+        return 1;
+    }
 
     sf::RenderWindow window(sf::VideoMode(windowWidth, windowHeight), "CLX TANK"/*, sf::Style::Fullscreen*/);
     
@@ -22,6 +28,8 @@ int main()
     GameWrapper *gameWrapper = new GameWrapper();
 
     gameWrapper->setWindow(window);
+
+    gameWrapper->setBackgroundTexture(backgroundTexture);
 
     Player* playerOne = new Player();
 

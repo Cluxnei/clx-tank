@@ -12,6 +12,7 @@ class GameWrapper
 		std::vector<Enemy> enemies;
 		std::vector<Shoot> shoots;
 		sf::RenderWindow *window;
+		sf::Sprite background;
 		int startTime;
 		int lastElapsedTime;
 		int lastEnemySpawnTime;
@@ -36,6 +37,7 @@ class GameWrapper
 		void renderShoots();
 		void clearAndReallocateResources();
 		void reallocShoots();
+		void setBackgroundTexture(sf::Texture &texture);
 };
 
 
@@ -81,6 +83,7 @@ void GameWrapper::renderPlayers() {
 
 void GameWrapper::render() {
 	this->window->clear();
+	this->window->draw(this->background);
 	this->renderShoots();
 	this->renderPlayers();
 	this->window->display();
@@ -130,4 +133,8 @@ void GameWrapper::reallocShoots() {
 		}
 		++it;
 	}
+}
+
+void GameWrapper::setBackgroundTexture(sf::Texture& texture) {
+	this->background.setTexture(texture);
 }

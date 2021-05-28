@@ -70,7 +70,7 @@ void Player::update(sf::RenderWindow* window, std::vector<Shoot>& shoots, int el
 	Utils::setOriginAndReadjust(this->shape, sf::Vector2f(diffOrigin, diffOrigin));
 	this->shape.setRotation(angle);
 	this->shootStartPoint = this->shape.getTransform().transformPoint(32, 16);
-	if (Utils::currentTime() - this->lastShootAt > this->shootDelay && sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
+	if (Utils::currentTime() - this->lastShootAt >= this->shootDelay && sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
 		this->shoot(shoots, mousePosition);
 		this->lastShootAt = Utils::currentTime();
 	}
