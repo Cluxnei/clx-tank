@@ -46,6 +46,7 @@ int main()
         gameWrapper->bindInputs();
         gameWrapper->update();
         gameWrapper->render();
+        gameWrapper->clearAndReallocateResources();
     }
 
     return 0;

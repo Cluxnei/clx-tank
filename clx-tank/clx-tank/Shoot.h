@@ -17,8 +17,8 @@ class Shoot
 			this->active = true;
 			this->movementLimits = std::make_pair(std::make_pair(0.f, 0.f), std::make_pair(0.f, 0.f));
 			this->shape.setPosition(this->position);
-			this->shape.setFillColor(sf::Color::Blue);
-			this->shape.setSize(sf::Vector2f(10.f, 30.f));
+			this->shape.setFillColor(sf::Color::Red);
+			this->shape.setSize(sf::Vector2f(3.f, 10.f));
 		}
 		void update();
 		void render(sf::RenderWindow* window);

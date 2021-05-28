@@ -81,8 +81,8 @@ void GameWrapper::renderPlayers() {
 
 void GameWrapper::render() {
 	this->window->clear();
-	this->renderPlayers();
 	this->renderShoots();
+	this->renderPlayers();
 	this->window->display();
 }
 
